@@ -1,11 +1,11 @@
 import random
-random.seed(420)  # for consistency
+random.seed(42)  # for consistency
 
 # ------------------------------- #
 # Number of passengers; should be in (5, 10, 20, 50, 100, 200, 500, 1000)
-N = 5
+N = 100
 # Capacity of the bus
-K = 3
+K = 10
 # To indicate if the cost matrix is balanced or not (c[i, j] == c[j, i])
 # Should be in (B, I)
 IS_BALANCED = 'B'
@@ -30,7 +30,7 @@ def main():
                 if i != j:
                     cost_matrix[i][j] = str(random.choice(COST_RANGE))
 
-    with open(f'tests/CBUS_{N}_{K}_{IS_BALANCED}.txt', 'w') as f:
+    with open(f'data/CBUS_{N}_{K}_{IS_BALANCED}.txt', 'w') as f:
         f.write(f'{N} {K}\n')
         f.write('\n'.join(tuple(map(' '.join, cost_matrix))))
 
