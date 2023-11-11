@@ -10,7 +10,8 @@ def main():
             cost_matrix.append(tuple(map(int, f.readline().split())))
 
     # Test
-    route = '1 2 6 7 5 10 3 4 8 9'
+    # route = '1 2 6 7 5 10 3 4 8 9'
+    route = [0, 1, 5, 6, 4, 9, 2, 3, 7, 8]
     print(result(N, K, cost_matrix, route).route_cost())
 
 
