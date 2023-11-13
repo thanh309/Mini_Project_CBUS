@@ -6,7 +6,7 @@ def main():
 
 
     ########## Read the input ##########
-    with open('data/CBUS_10_4_B.txt', 'r') as f:
+    with open('data/example2.txt', 'r') as f:
         N, K = tuple(map(int, f.readline().split()))
         c = []
 
@@ -47,7 +47,7 @@ def main():
     t = [model.NewIntVar(0, 2*N + 1, f't[{i}]') for i in range(NUM_NODES)]
 
     # The time of arrival of the locations must be different from each others
-    model.AddAllDifferent(t)
+    # model.AddAllDifferent(t) # not needed, can be remove when doing linearization
 
     # Time of arrival at the endpoints
     model.Add(t[0] == 0)
@@ -91,10 +91,10 @@ def main():
     objective = cp_model.LinearExpr.WeightedSum(x.flatten(), c.flatten())
     model.Minimize(objective)
     solver = cp_model.CpSolver()
-    solver.parameters.log_search_progress = True
+    # solver.parameters.log_search_progress = True
     solver.Solve(model)
 
-    # print(solver.ObjectiveValue())
+    print(solver.ObjectiveValue())
     # print(solver.Values(t))
     # print(solver.Values(y))
 
