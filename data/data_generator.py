@@ -3,9 +3,9 @@ random.seed(42)  # for consistency
 
 # ------------------------------- #
 # Number of passengers; should be in (5, 10, 20, 50, 100, 200, 500, 1000)
-N = 100
+N = 10
 # Capacity of the bus
-K = 10
+K = 4
 # To indicate if the cost matrix is balanced or not (c[i, j] == c[j, i])
 # Should be in (B, I)
 IS_BALANCED = 'B'
