@@ -1,5 +1,4 @@
 from ortools.sat.python import cp_model
-import numpy as np
 
 
 def main():
@@ -17,7 +16,6 @@ def main():
         c[i].append(c[i][0])
 
     c.append(c[0])
-    c = np.array(c)
 
     NUM_NODES = 2*N + 2
     model = cp_model.CpModel()
@@ -26,19 +24,18 @@ def main():
 
     ########## Add the flow variables and their constraints ##########
 
-    x = np.array([[model.NewBoolVar(f'x[{i}, {j}]') for j in range(
-        NUM_NODES)] for i in range(NUM_NODES)])
+    x = [[model.NewBoolVar(f'x[{i}, {j}]') for j in range(NUM_NODES)] for i in range(NUM_NODES)]
 
     # 1. Each location (except the origin and destination of the bus) is visited exactly once
     # (has 1 way in and 1 way out)
     for i in range(1, NUM_NODES - 1):
-        model.Add(cp_model.LinearExpr.Sum(x[i, 1:NUM_NODES]) == 1)
-        model.Add(cp_model.LinearExpr.Sum(x[0:NUM_NODES-1, i]) == 1)
+        model.Add(cp_model.LinearExpr.Sum(x[i][1:NUM_NODES]) == 1)
+        model.Add(cp_model.LinearExpr.Sum([lst[i] for lst in x[0:NUM_NODES-1]]) == 1)
 
     # 2. The next location from the origin must be one of the passenger pick-up points,
     # and the destination of the bus must be accessed through one of the drop-off points
-    model.Add(cp_model.LinearExpr.Sum(x[0, 1:N+1]) == 1)
-    model.Add(cp_model.LinearExpr.Sum(x[N+1:NUM_NODES-1, NUM_NODES-1]) == 1)
+    model.Add(cp_model.LinearExpr.Sum(x[0][1:N+1]) == 1)
+    model.Add(cp_model.LinearExpr.Sum([lst[NUM_NODES-1] for lst in x[N+1:NUM_NODES-1]]) == 1)    
 
 
 
@@ -47,7 +44,7 @@ def main():
     t = [model.NewIntVar(0, 2*N + 1, f't[{i}]') for i in range(NUM_NODES)]
 
     # The time of arrival of the locations must be different from each others
-    model.AddAllDifferent(t)
+    # model.AddAllDifferent(t)
 
     # Time of arrival at the endpoints
     model.Add(t[0] == 0)
@@ -82,14 +79,19 @@ def main():
 
     for i in range(NUM_NODES):
         for j in range(NUM_NODES):
-            model.Add(t[i] + 1 == t[j]).OnlyEnforceIf(x[i, j])
-            model.Add(y[j] == y[i] + pax[j]).OnlyEnforceIf(x[i, j])
+            model.Add(t[i] + 1 == t[j]).OnlyEnforceIf(x[i][j])
+            model.Add(y[j] == y[i] + pax[j]).OnlyEnforceIf(x[i][j])
 
 
 
     ########## Set the objective function and solving the CP problem ##########
-    objective = cp_model.LinearExpr.WeightedSum(x.flatten(), c.flatten())
-    model.Minimize(objective)
+
+    objective = []
+    for i in range(NUM_NODES):
+        for j in range(NUM_NODES):
+            objective.append(x[i][j] * c[i][j])
+
+    model.Minimize(cp_model.LinearExpr.Sum(objective))
     solver = cp_model.CpSolver()
     # solver.parameters.log_search_progress = True
     solver.Solve(model)

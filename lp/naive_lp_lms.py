@@ -1,5 +1,4 @@
 from ortools.linear_solver import pywraplp
-import numpy as np
 
 
 def main():
@@ -17,7 +16,6 @@ def main():
         c[i].append(c[i][0])
 
     c.append(c[0])
-    c = np.array(c)
 
     NUM_NODES = 2*N + 2
     solver = pywraplp.Solver.CreateSolver('SCIP')
@@ -27,20 +25,19 @@ def main():
 
     ########## Add the flow variables and their constraints ##########
 
-    x = np.array([[solver.BoolVar(f'x[{i}, {j}]') for j in range(
-        NUM_NODES)] for i in range(NUM_NODES)])
+    x = [[solver.BoolVar(f'x[{i}, {j}]') for j in range(NUM_NODES)] for i in range(NUM_NODES)]
     
 
     # 1. Each location (except the origin and destination of the bus) is visited exactly once
     # (has 1 way in and 1 way out)
     for i in range(1, NUM_NODES - 1):
-        solver.Add(solver.Sum(x[i, 1:NUM_NODES]) == 1)
-        solver.Add(solver.Sum(x[0:NUM_NODES-1, i]) == 1)
+        solver.Add(solver.Sum(x[i][1:NUM_NODES]) == 1)
+        solver.Add(solver.Sum([lst[i] for lst in x[0:NUM_NODES-1]]) == 1)
 
     # 2. The next location from the origin must be one of the passenger pick-up points,
     # and the destination of the bus must be accessed through one of the drop-off points
-    solver.Add(solver.Sum(x[0, 1:N+1]) == 1)
-    solver.Add(solver.Sum(x[N+1:NUM_NODES-1, NUM_NODES-1]) == 1)
+    solver.Add(solver.Sum(x[0][1:N+1]) == 1)
+    solver.Add(solver.Sum([lst[NUM_NODES-1] for lst in x[N+1:NUM_NODES-1]]) == 1)
 
 
 
@@ -83,18 +80,18 @@ def main():
     # Constraint linearization
     for i in range(NUM_NODES):
         for j in range(NUM_NODES):
-            solver.Add(3*N*(1-x[i, j]) + t[i] + 1 >= t[j])
-            solver.Add(-3*N*(1-x[i, j]) + t[i] + 1 <= t[j])
-            solver.Add(3*K*(1-x[i, j]) + y[j] >= y[i] + pax[j])
-            solver.Add(-3*K*(1-x[i, j]) + y[j] <= y[i] + pax[j])
+            solver.Add(3*N*(1-x[i][j]) + t[i] + 1 >= t[j])
+            solver.Add(-3*N*(1-x[i][j]) + t[i] + 1 <= t[j])
+            solver.Add(3*K*(1-x[i][j]) + y[j] >= y[i] + pax[j])
+            solver.Add(-3*K*(1-x[i][j]) + y[j] <= y[i] + pax[j])
 
 
 
     ########## Set the objective function and solving the CP problem ##########
     objective = []
-    x_flat, c_flat = x.flatten(), c.flatten()
-    for i in range(len(x_flat)):
-        objective.append(x_flat[i] * c_flat[i])
+    for i in range(NUM_NODES):
+        for j in range(NUM_NODES):
+            objective.append(x[i][j] * c[i][j])
 
     solver.Minimize(solver.Sum(objective))
     # solver.EnableOutput()

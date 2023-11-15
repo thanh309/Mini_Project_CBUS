@@ -3,9 +3,9 @@ random.seed(42)  # for consistency
 
 # ------------------------------- #
 # Number of passengers; should be in (5, 10, 20, 50, 100, 200, 500, 1000)
-N = 100
+N = 20
 # Capacity of the bus
-K = 20
+K = 8
 # The range of the cost between two locations
 COST_RANGE = range(1, 3*N)
 # ------------------------------- #
