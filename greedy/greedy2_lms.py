@@ -5,11 +5,8 @@ def main():
     N, K = tuple(map(int, input().split()))
     c = []
 
-    for i in range(2*N + 1):
+    for _ in range(2*N + 1):
         c.append(list(map(int, input().split())))
-        c[i].append(c[i][0])
-
-    c.append(c[0])
 
     load = 0
     unvisited = list(range(1, 2*N + 1))

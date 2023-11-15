@@ -1,16 +1,11 @@
 # Greedy
 
-with open('data/example5.txt', 'r') as f:
+with open('data/example3.txt', 'r') as f:
     N, K = tuple(map(int, f.readline().split()))
     c = []
 
-    for i in range(2*N + 1):
+    for _ in range(2*N + 1):
         c.append(list(map(int, f.readline().split())))
-        # Modify the cost matrix: add the auxiliary point 2N + 1,
-        # which has the same geographical location as point 0
-        c[i].append(c[i][0])
-
-    c.append(c[0])
 
 
 load = 0
