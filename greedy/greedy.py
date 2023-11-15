@@ -1,6 +1,6 @@
 # Greedy
 
-with open('data/example3.txt', 'r') as f:
+with open('data/example5.txt', 'r') as f:
     N, K = tuple(map(int, f.readline().split()))
     c = []
 
@@ -19,34 +19,22 @@ route = [0]
 
 while unvisited:
 
-
     if load < K:
 
-        cand = list(filter(lambda x: (x <= N), unvisited))
+        cand = filter(lambda x: (x <= N or x - N in route[1:]), unvisited)
         nearest_loc, nearest_dist = -1, float('inf')
-        
 
-        if cand:
-            for loc in cand:
-                if c[route[-1]][loc] < nearest_dist:
-                    nearest_loc = loc
-                    nearest_dist = c[route[-1]][loc]
-            route.append(nearest_loc)
-            unvisited.remove(nearest_loc)
+        for loc in cand:
+            if c[route[-1]][loc] < nearest_dist:
+                nearest_loc = loc
+                nearest_dist = c[route[-1]][loc]
+        route.append(nearest_loc)
+        unvisited.remove(nearest_loc)
+        if nearest_loc <= N:
             load += 1
-            continue
-
-
         else:
-            for loc in unvisited:
-                if c[route[-1]][loc] < nearest_dist:
-                    nearest_loc = loc
-                    nearest_dist = c[route[-1]][loc]
-            route.append(nearest_loc)
-            unvisited.remove(nearest_loc)
             load -= 1
-            continue
-
+        continue
 
     else:
 
