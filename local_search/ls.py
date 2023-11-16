@@ -1,6 +1,6 @@
 def main():
 
-    with open('data/example4.txt', 'r') as f:
+    with open('data/example3.txt', 'r') as f:
         N, K = tuple(map(int, f.readline().split()))
         c = []
 
@@ -33,7 +33,7 @@ def main():
 
         else:
 
-            cand = list(filter(lambda x: (x - N in route[1:]), unvisited))
+            cand = filter(lambda x: (x - N in route[1:]), unvisited)
             nearest_loc, nearest_dist = -1, float('inf')
 
             for loc in cand:

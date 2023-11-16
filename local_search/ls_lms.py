@@ -93,7 +93,7 @@ def main():
             - c[route[i-1]][route[i]] - c[route[i]][route[i+1]] - c[route[j-1]][route[j]] - c[route[j]][route[j+1]]
 
 
-    for ITER in range(5):
+    for ITER in range(1):
 
         for pickup in range(1, N + 1):
 
@@ -110,6 +110,7 @@ def main():
                 if delta < best:
                     best = delta
                     index_swap = index_cand
+                    break
             
             if index_swap == -1:
                 continue
