@@ -1,12 +1,14 @@
+from time import perf_counter as t
 def main():
 
-    with open('data/example3.txt', 'r') as f:
+    with open('data/example2.txt', 'r') as f:
         N, K = tuple(map(int, f.readline().split()))
         c = []
 
         for i in range(2*N + 1):
             c.append(list(map(int, f.readline().split())))
 
+    a = t()
 
     load = 0
     unvisited = list(range(1, 2*N + 1))
@@ -139,6 +141,7 @@ def main():
 
     print(N)
     print(*route[1:-1])
+    print(t() - a)
 
 if __name__ == '__main__':
     main()
