@@ -4,7 +4,7 @@ from time import time
 # random.seed(42)
 
 
-with open('data/example5.txt', 'r') as f:
+with open('data/example3.txt', 'r') as f:
     N, K = tuple(map(int, f.readline().split()))
     c = []
 
@@ -115,7 +115,7 @@ while unvisited:
 
 route.append(2*N + 1)
 
-print(route_cost())
+greedy_res = route_cost()
 
 # random.shuffle(cands)
 
@@ -189,8 +189,10 @@ for iter in range(MAX_ITER):
 
         route.insert(action[1] + 1, cand + N)
         route.insert(action[0] + 1, cand)
-        print(route_cost())
-        
+        # print(route_cost())
+
+res2 = route_cost()
 # print(route)
-print(max_capacity()[0])
+# print(max_capacity()[0])
 print('time:', time()-a)
+print(res2/greedy_res)

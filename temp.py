@@ -1,11 +1,15 @@
+from time import perf_counter as t
+from cProfile import run
 def main():
 
-    N, K = tuple(map(int, input().split()))
-    c = []
+    with open('data/example3.txt', 'r') as f:
+        N, K = tuple(map(int, f.readline().split()))
+        c = []
 
-    for i in range(2*N + 1):
-        c.append(list(map(int, input().split())))
+        for i in range(2*N + 1):
+            c.append(list(map(int, f.readline().split())))
 
+    a = t()
 
     load = 0
     unvisited = list(range(1, 2*N + 1))
@@ -52,17 +56,17 @@ def main():
 
 
     # Evaluation function
-    # def route_cost(route) -> int:
-    #     result = 0
+    def route_cost(route) -> int:
+        result = 0
         
-    #     for i in range(2*N - 1):
-    #         from_loc = route[i]
-    #         to_loc = route[i + 1]
-    #         result += c[from_loc][to_loc]
+        for i in range(2*N - 1):
+            from_loc = route[i]
+            to_loc = route[i + 1]
+            result += c[from_loc][to_loc]
 
-    #     result += c[route[-1]][0]
-    #     result += c[0][route[0]]
-    #     return result
+        result += c[route[-1]][0]
+        result += c[0][route[0]]
+        return result
 
 
     def constraint_violated() -> bool:
@@ -157,6 +161,9 @@ def main():
 
     print(N)
     print(*route[1:-1])
+    print(t() - a)
+    print(route_cost(route[1:-1]))
+
 
 if __name__ == '__main__':
-    main()
+    run('main()')

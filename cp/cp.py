@@ -6,7 +6,7 @@ def main():
 
 
     ########## Read the input ##########
-    with open('data/example2.txt', 'r') as f:
+    with open('data/example3.txt', 'r') as f:
         N, K = tuple(map(int, f.readline().split()))
         c = []
 
@@ -91,7 +91,7 @@ def main():
     objective = cp_model.LinearExpr.WeightedSum(x.flatten(), c.flatten())
     model.Minimize(objective)
     solver = cp_model.CpSolver()
-    # solver.parameters.log_search_progress = True
+    solver.parameters.log_search_progress = True
     solver.Solve(model)
 
     print(solver.ObjectiveValue())
