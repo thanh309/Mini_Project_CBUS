@@ -2,7 +2,7 @@ from time import perf_counter as t
 from cProfile import run
 def main():
 
-    with open('data/example3.txt', 'r') as f:
+    with open('data/example4.txt', 'r') as f:
         N, K = tuple(map(int, f.readline().split()))
         c = []
 
@@ -160,8 +160,8 @@ def main():
 
 
     print(N)
-    # print(*route[1:-1])
-    # print(t() - a)
+    print(*route[1:-1])
+    print(t() - a)
     print(route_cost(route[1:-1]))
 
 
